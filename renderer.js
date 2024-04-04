@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-const messages = [
+let messages = [
     { role: "system", content: "You are a helpful assistant." }
     ];
 // const 
@@ -50,4 +50,12 @@ function displayInChat(message) {
      // Different background colors for user and AI messages
      chatDiv.appendChild(messageElement);
      chatDiv.scrollTop = chatDiv.scrollHeight;
+ }
+
+ function clearChat() {
+    const chatDiv = document.getElementById('chat');
+    chatDiv.innerHTML = '';
+    messages = [
+        { role: "system", content: "You are a helpful assistant." }
+    ];
  }
