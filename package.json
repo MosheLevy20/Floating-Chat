@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^29.1.6",
+    "highlight.js": "^11.9.0",
     "openai": "^4.32.1"
   }
 }

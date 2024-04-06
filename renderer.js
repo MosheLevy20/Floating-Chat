@@ -29,28 +29,57 @@ document.getElementById('userInput').addEventListener('keypress', async (event) 
         displayInChat(`AI: ${aiResponse.content}`);
     }
 });
-
 function displayInChat(message) {
     const chatDiv = document.getElementById('chat');
     const messageElement = document.createElement('p');
-   
-    
-    // Add styling to justify the text and format code blocks
+
+    // Basic styling for message
     messageElement.style.textAlign = 'left';
-    messageElement.style.backgroundColor = message.startsWith('You') ? '#333' : '#000';
-    // remove You or AI from the message
-    message = message.replace("You: ", "");
-    message = message.replace("AI: ", "");
-    messageElement.textContent = message;
+    messageElement.style.margin = '10px 0';
+    messageElement.style.padding = '10px';
+    messageElement.style.borderRadius = '5px';
     messageElement.style.whiteSpace = 'pre-wrap';
-    messageElement.style.fontFamily = 'Courier, monospace'; // Use monospace font for code-like appearance
-    messageElement.style.margin = '10px 0'; // Add some vertical spacing between messages
-    messageElement.style.padding = '10px'; // Add some padding around the text
-    messageElement.style.borderRadius = '5px'; // Round the corners for a chat bubble appearance
-     // Different background colors for user and AI messages
-     chatDiv.appendChild(messageElement);
-     chatDiv.scrollTop = chatDiv.scrollHeight;
- }
+    messageElement.style.fontFamily = 'Courier, monospace';
+    messageElement.style.backgroundColor = message.startsWith('You') ? '#333' : '#000';
+
+    // Clean up the message
+    message = message.replace(/^You: /, "").replace(/^AI: /, "");
+
+    // Adjusted regex to capture language name
+    const codeRegex = /```(\w+)[ \n]([^`]+)```/g;
+    message = message.replace(codeRegex, (match, lang, code) => {
+        if (["python", "javascript", "java", "c", "c++", "cpp", "c#", "csharp", "html", "css", "php", "ruby", "go", "swift", "kotlin", "typescript", "rust", "scala", "r", "sql", "shell", "bash", "powershell", "perl", "lua", "dart", "haskell", "erlang", "elixir", "clojure", "f#", "ocaml", "racket", "julia", "nim", "crystal", "lisp", "scheme", "smalltalk", "forth", "prolog", "pascal", "ada", "fortran", "cobol", "abap", "apl", "pl/i", "rexx", "tcl", "verilog", "vhdl", "systemverilog", "v", "assembly", "objective-c", "objective-j", "actionscript", "scala", "groovy", "perl6", "raku", "coffee", "coffeescript", "jsx", "tsx", "reason", "ocaml"].includes(lang.toLowerCase())) {
+            return `<div class="code-block" style="padding: 5px; border-radius: 4px; cursor: pointer;"><pre><code class="language-${lang}">${code}</code></pre></div>`;
+            // return `<pre><code class="language-${lang}">${code}</code></pre>`;
+        }
+        return match;
+    });
+
+
+    messageElement.innerHTML = message;
+
+    chatDiv.appendChild(messageElement);
+    // call reHighlight function that's defined in index.html
+    reHighlight();
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+    // hljs.highlightBlock(messageElement);
+    // document.querySelectorAll('pre code').forEach(block => {
+    //     hljs.highlightBlock(block);
+    // });
+
+    // Clipboard copy functionality
+    document.querySelectorAll('.code-block').forEach(block => {
+        block.addEventListener('click', () => {
+            navigator.clipboard.writeText(block.textContent).then(() => {
+                console.log('Code copied to clipboard!');
+                // Optionally, provide user feedback here
+            }).catch(err => {
+                console.error('Error copying code to clipboard: ', err);
+            });
+        });
+    });
+}
+
 
  function clearChat() {
     const chatDiv = document.getElementById('chat');

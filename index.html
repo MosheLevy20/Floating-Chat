@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>AI Chatbox</title>
+    <link rel="stylesheet" href="dracula.css">
+    <!-- Highlight.js Library -->
+    <script src="hljs.js"></script>
+    <script>hljs.initHighlightingOnLoad();
+        function reHighlight() {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+        }
+    </script>
     <style>
         body {
             background-color: rgba(0, 0, 0, 0.7);
@@ -41,14 +51,22 @@
             font-size: 20px;
         }
     </style>
+    
 </head>
 <body>
+    <pre><code class="language-python">
+        # Python sample code
+        def hello_world():
+            print("Hello, world!")
+            </code></pre>
     <div id="chat"></div>
         
  
     <input type="text" id="userInput"/>
     <!-- clear chat button -->
     <button onclick="clearChat()">Clear Chat</button>
+    <!-- re highlight -->
+    <!-- <button onclick="reHighlight()">Re-highlight</button> -->
     <script src="renderer.js"></script>
 </body>
 </html>
